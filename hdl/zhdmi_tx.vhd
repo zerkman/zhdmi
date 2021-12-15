@@ -20,7 +20,7 @@ use ieee.numeric_std.all;
 
 library zhdmi;
 
-entity zhdmi_tx is
+entity hdmi_tx is
 	generic (
 		SAMPLE_FREQ : integer := 48000
 	);
@@ -43,10 +43,10 @@ entity zhdmi_tx is
 		tx_d_n   : out std_logic_vector(2 downto 0);	-- TMDS data channels
 		tx_d_p   : out std_logic_vector(2 downto 0)		-- 0:blue, 1:green, 2:red
 	);
-end zhdmi_tx;
+end hdmi_tx;
 
 
-architecture rtl of zhdmi_tx is
+architecture rtl of hdmi_tx is
 	type tmds_d_t is array(0 to 2) of std_logic_vector(9 downto 0);
 	signal tmds_d : tmds_d_t;
 

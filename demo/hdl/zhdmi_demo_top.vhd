@@ -108,7 +108,7 @@ begin
 		de => de
 	);
 
-	hdmi:entity zhdmi.zhdmi_tx generic map (
+	hdmi:entity zhdmi.hdmi_tx generic map (
 		SAMPLE_FREQ => SAMPLE_FREQ
 	) port map (
 		clk => clk,
