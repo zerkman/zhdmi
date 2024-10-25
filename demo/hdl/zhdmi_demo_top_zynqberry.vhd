@@ -51,7 +51,7 @@ architecture structure of zhdmi_demo_top is
 		);
 	end component;
 
-	component processing_system7_0 is
+	component ps_zynqberry is
 		port (
 			FCLK_CLK0		: out std_logic;
 			FCLK_RESET0_N	: out std_logic;
@@ -85,7 +85,7 @@ begin
 	audio_r <= pcm(13 downto 0) & "0000000000";
 	vid_cfg <= '0';
 
-	ps:processing_system7_0 port map (
+	ps:ps_zynqberry port map (
 		FCLK_CLK0 => sys_clk,
 		FCLK_RESET0_N => sys_rstn,
 		MIO => FIXED_IO_mio,
