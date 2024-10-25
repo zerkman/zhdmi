@@ -76,7 +76,7 @@ begin
 		end if;
 	end process;
 
-	process(xcnt)
+	process(xcnt,resetn)
 	begin
 		if xcnt<HSWIDTH and resetn = '1' then
 			hsync <= HSPOLARITY;
@@ -85,7 +85,7 @@ begin
 		end if;
 	end process;
 
-	process(ycnt)
+	process(ycnt,resetn)
 	begin
 		if ycnt<VSWIDTH and resetn = '1' then
 			VSYNC <= VSPOLARITY;
