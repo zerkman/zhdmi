@@ -22,7 +22,10 @@ library zhdmi;
 
 entity hdmi_tx is
 	generic (
-		SAMPLE_FREQ : integer := 48000
+		SAMPLE_FREQ : integer := 48000;
+		-- Invert flags for the different TMDS channels.
+		-- Set a channel bit to 1 if the p and n outputs for that channel are swapped.
+		INVERTED_TX : std_logic_vector(3 downto 0) := "0000"
 	);
 	port (
 		clk      : in std_logic;	-- pixel clock
@@ -49,6 +52,8 @@ end hdmi_tx;
 architecture rtl of hdmi_tx is
 	type tmds_d_t is array(0 to 2) of std_logic_vector(9 downto 0);
 	signal tmds_d : tmds_d_t;
+	signal enc_d  : tmds_d_t;
+	signal clk_d  : std_logic_vector(9 downto 0);
 
 	signal data : std_logic_vector(23 downto 0);
 	signal sde  : std_logic;
@@ -57,6 +62,10 @@ architecture rtl of hdmi_tx is
 	signal dgb  : std_logic;
 
 begin
+	tmds_d(0) <= enc_d(0) when INVERTED_TX(0) = '0' else not enc_d(0);
+	tmds_d(1) <= enc_d(1) when INVERTED_TX(1) = '0' else not enc_d(1);
+	tmds_d(2) <= enc_d(2) when INVERTED_TX(2) = '0' else not enc_d(2);
+	clk_d <= "1111100000" when INVERTED_TX(3) = '0' else "0000011111";
 
 	signaler: entity zhdmi.signaling generic map (
 			SAMPLE_FREQ => SAMPLE_FREQ
@@ -84,7 +93,7 @@ begin
 		clk => clk,
 		sclk => sclk,
 		reset => reset,
-		tmds_d => "1111100000",
+		tmds_d => clk_d,
 		tx_d_n => tx_clk_n,
 		tx_d_p => tx_clk_p
 	);
@@ -100,7 +109,7 @@ begin
 			ae => sae,
 			vgb => vgb,
 			dgb => dgb,
-			tmds_d => tmds_d(i)
+			tmds_d => enc_d(i)
 		);
 
 		serial: entity zhdmi.tmds_serializer port map (

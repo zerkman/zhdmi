@@ -113,7 +113,8 @@ begin
 	);
 
 	hdmi:entity zhdmi.hdmi_tx generic map (
-		SAMPLE_FREQ => SAMPLE_FREQ
+		SAMPLE_FREQ => SAMPLE_FREQ,
+		INVERTED_TX => "1001"
 	) port map (
 		clk => clk,
 		sclk => sclk,
