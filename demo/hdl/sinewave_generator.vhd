@@ -64,24 +64,22 @@ begin
 	pcm_clk <= aclk;
 
 	-- generate audio signal
-	process(clk)
+	process(clk,reset)
 	begin
-		if rising_edge(clk) then
-			if reset = '1' then
-				aclk <= '0';
-				aclk_cnt <= (others => '0');
-				pcm <= x"0000";
-				wave_cnt <= (others => '0');
+		if reset = '1' then
+			aclk <= '0';
+			aclk_cnt <= (others => '0');
+			pcm <= x"0000";
+			wave_cnt <= (others => '0');
+		elsif rising_edge(clk) then
+			if aclk_cnt + DIV < NUM then
+				aclk_cnt <= aclk_cnt + DIV;
 			else
-				if aclk_cnt + DIV < NUM then
-					aclk_cnt <= aclk_cnt + DIV;
-				else
-					aclk_cnt <= aclk_cnt + DIV - NUM;
-					aclk <= not aclk;
-					if aclk = '0' then
-						wave_cnt <= wave_cnt + wave_inc;
-						pcm <= std_logic_vector(resize(sintbl(to_integer(wave_cnt(23 downto 12))),16));
-					end if;
+				aclk_cnt <= aclk_cnt + DIV - NUM;
+				aclk <= not aclk;
+				if aclk = '0' then
+					wave_cnt <= wave_cnt + wave_inc;
+					pcm <= std_logic_vector(resize(sintbl(to_integer(wave_cnt(23 downto 12))),16));
 				end if;
 			end if;
 		end if;
