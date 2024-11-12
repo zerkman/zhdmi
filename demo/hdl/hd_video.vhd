@@ -94,9 +94,9 @@ begin
 		end if;
 	end process;
 
-	process(PCLK)
+	process(pclk)
 	begin
-		if rising_edge(PCLK) then
+		if rising_edge(pclk) then
 			if resetn = '0' then
 				xcnt <= (others => '0');
 				ycnt <= (others => '0');
@@ -126,6 +126,10 @@ begin
 				if ycnt >= VBORDER and ycnt < VBORDER+VLINES then
 					if xcnt >= HBORDER-1 and xcnt < HBORDER+HCOLUMNS-1 then
 						sde <= '1';
+					else
+						sde <= '0';
+					end if;
+					if xcnt >= HBORDER and xcnt < HBORDER+HCOLUMNS then
 						if xcc+16 >= (HCOLUMNS*16/256) then
 							xcc <= xcc + 16 - (HCOLUMNS*16/256);
 							g <= g + 1;
@@ -133,7 +137,6 @@ begin
 							xcc <= xcc + 16;
 						end if;
 					else
-						sde <= '0';
 						if xcnt = HRES-1 then
 							xcc <= (others => '0');
 							if ycc+32 >= (VLINES*32/256) then
